@@ -18,6 +18,8 @@ stage('first') {
 		    ls -l
                 """
             }
+        } catch(e) {
+            throw e
         }
 	}
 }
