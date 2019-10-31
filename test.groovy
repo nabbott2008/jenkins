@@ -16,7 +16,8 @@ stage('first') {
 	    deleteDir()
             retry(3) {
                 sh """#!/bin/bash -x
-		    ls -l
+		            touch ${testInput}
+                    ls -l
                 """
             }
         } catch(e) {
