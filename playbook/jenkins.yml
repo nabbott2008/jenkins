@@ -1,0 +1,35 @@
+---
+- hosts: el03
+  tasks:
+  - name: Delete /etc/yum.repos.d/docker-ce.repo
+    file:
+      path: /etc/yum.repos.d/docker-ce.repo
+      state: absent
+  - name: install docker repo
+    get_url: 
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      mode: '0644'
+  - name: install docker
+    yum:
+      name: docker-ce
+      state: latest
+  - name: create jenkins folder
+    file:
+      path: /var/lib/jenkins
+      state: directory
+      mode: '0755'
+  - name: install docker compose
+    shell: curl -kL "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - name: set perms on docker compose
+    file:
+      path: /usr/local/bin/docker-compose
+      mode: a+x
+  - name: add docker compose file
+    file:
+      path: /opt/docker-compose-jenkins.yaml
+      mode: '0644'
+  - name: copy docker compose file
+    copy:
+      src: jenkins-compose.yaml
+      dst: /opt/docker-compose-jenkins.yaml
