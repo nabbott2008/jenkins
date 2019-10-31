@@ -1,5 +1,5 @@
 ---
-- hosts: el03
+- hosts: clients
   tasks:
   - name: Delete /etc/yum.repos.d/docker-ce.repo
     file:
