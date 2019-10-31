@@ -1,0 +1,14 @@
+[Unit]
+Description=jenkins
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+ExecStart=/usr/local/bin/docker-compose -f /opt/docker-compose-jenkins.yml up
+
+ExecStop=/usr/local/bin/docker-compose -f /opt/docker-compose-jenkins.yml down -v
+
+[Install]
+WantedBy=multi-user.target

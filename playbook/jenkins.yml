@@ -20,16 +20,30 @@
       state: directory
       mode: '0755'
   - name: install docker compose
-    shell: curl -kL "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    shell: stat /usr/local/bin/docker-compose || curl -kL "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - name: set perms on docker compose
     file:
       path: /usr/local/bin/docker-compose
       mode: a+x
-  - name: add docker compose file
-    file:
-      path: /opt/docker-compose-jenkins.yaml
-      mode: '0644'
   - name: copy docker compose file
     copy:
-      src: jenkins-compose.yaml
-      dst: /opt/docker-compose-jenkins.yaml
+      src: ./jenkins-compose.yml
+      dest: /opt/docker-compose-jenkins.yml
+  - name: start docker
+    systemd:
+      state: started
+      name: docker
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+  - name: copy jenkins docker compose systemd file
+    copy:
+      src: ./jenkins.service
+      dest: /etc/systemd/system/jenkins.service
+      mode: '0755'
+  - name: reload systemd daemon
+    shell: /usr/bin/systemctl daemon-reload
+  - name: enable jenkins
+    shell: /usr/bin/systemctl enable jenkins
+  - name: bring up jenkins
+    shell: /usr/bin/systemctl start jenkins
