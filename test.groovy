@@ -2,7 +2,8 @@ def testInput
 stage('first') {
     try {
         timeout(1440) {
-	    testInput = input message: "Provide input", parameters: [choice(choices: existingProductVersions, description: "select", name: 'lastInput')]
+        def params = ['one', 'two']
+	    testInput = input message: "Provide input", parameters: [choice(choices: params, description: "select", name: 'lastInput')]
             currentBuild.displayName = "${testInput}"
 
         }
