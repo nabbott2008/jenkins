@@ -11,3 +11,7 @@ CentOS7
 edit jenkins.yml to point to the host you're installing on and then run:
 
 ```ansible-playbook -vvv jenkins.yml```
+
+## Also contained
+
+Is Dockerfile for the Docker image used.
